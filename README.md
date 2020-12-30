@@ -44,3 +44,6 @@ All operations involving updating the in-memory datastore are synchronous and he
 
 ## Tests
 The testing framework used is mocha and to run the tests simply clone this repository, install mocha and run `npm test`. The test code can be found in the `test.js` file under `test/`.
+
+# Supported Operating Systems
+Ideally this should work on any machine that can run the Node runtime. The filesystem path conventions used are those of the Node runtime and hence automatically converted to the relevant local naming system as used by the host machine by Node itself. However, this has only been tested on macOS Big Sur.
