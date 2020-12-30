@@ -41,3 +41,6 @@ dataStore.close();
 
 ## Thread safety
 All operations involving updating the in-memory datastore are synchronous and hence due to the nature of Node's execution mechanism, all operations should inherently be thread-safe. The only possible asynchronous operations are file updates after every 'create' but since they too will be sequential, there should be no special side effects.
+
+## Tests
+The testing framework used is mocha and to run the tests simply clone this repository, install mocha and run `npm test`. The test code can be found in the `test.js` file under `test/`.
