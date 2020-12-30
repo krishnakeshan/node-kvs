@@ -11,10 +11,21 @@ const dataStore = new KVS('optional/path/to/custom/store/file');
 ```
 
 ## Initialize the datastore
-Before you can use the datastore, you need to initialize it with the `init()` method. This performs the following actions in sequence:
+Before you can use the datastore, you need to initialize it with the `init()` method.
+```
+dataStore.init();
+```
+This performs the following actions in sequence:
 1. Checks if the current datastore file (custom or default) is already in use by another process. Since this is explicitly disallowed, an error will be thrown if the current file cannot be used by this process. The process only further continues if the datastore file can be used.
 2. Creates a lockfile that claims the current datastore file to be used by this process.
 3. Reads in any data from the datastore file and loads it into the in-memory dictionary maintaining the key-value store.
+
+### CRD (Creation, Deletion and Reads)
+1. `create(key, value, [ttl])`: lets you create a key-value entry with an optional `ttl` value (in seconds).
+2. `del(key)`: deletes the entry with the provided `key`.
+3. `read(key)`: returns the value object associated with the `key`.
+
+In all cases, relevant errors are thrown if any bounds (see next section) are exceeded or exceptional cases caused such as deletion or reading of non-existent keys, etc.
 
 ## Limits
 1. Keys cannot be greater than 32 characters in length.
