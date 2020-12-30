@@ -7,9 +7,17 @@ module.exports = class KVS {
     constructor(filePath = 'kvs-file') {
         this.dataStore = {};
         this.filePath = filePath;
+        this.lockFilePath = filePath + '-lock';
     }
 
     async init() {
+        // check if file is available for use
+        if (fs.existsSync(this.lockFilePath))
+            throw new Error(`file ${this.filePath} is already in use by another process`);
+
+        // create lockfile
+        fs.appendFileSync(this.lockFilePath, '1');
+
         // read data from file
         let data = fs.readFileSync(this.filePath, {
             encoding: 'utf-8'
@@ -21,7 +29,7 @@ module.exports = class KVS {
         }
     }
 
-    async create(key, value, ttl = -1) {
+    create(key, value, ttl = -1) {
         if (key.length > 32)
             throw new Error('key size exceeds 32 characters');
         if (this.dataStore.hasOwnProperty(key))
@@ -45,7 +53,7 @@ module.exports = class KVS {
             if (err) throw err;
 
             // check if file exceeded size limit
-            fs.stat(store.filePath, (err, stats) => {
+            fs.stat(this.filePath, (err, stats) => {
                 if (err) throw err;
 
                 if (stats.size > FILE_SIZE_LIMIT)
@@ -55,7 +63,7 @@ module.exports = class KVS {
     }
 
     read(key) {
-        if (!key.hasOwnProperty(key))
+        if (!this.dataStore.hasOwnProperty(key))
             throw new Error(`key ${key} does not exist`);
         return this.dataStore[key];
     }
@@ -70,7 +78,7 @@ module.exports = class KVS {
     }
 
     close() {
-        // copy all but 'key' entry to new file
+        // write changes to disk
         let tempFileName = this.filePath + '-temp';
         var wrote = 0;
         const entries = Object.entries(this.dataStore);
@@ -88,7 +96,12 @@ module.exports = class KVS {
                         // rename this file
                         fs.rename(tempFileName, this.filePath, (err) => {
                             if (err) throw err;
-                            console.log('renamed');
+
+                            // delete lockfile
+                            fs.unlink(this.lockFilePath, (err) => {
+                                if (err) throw err;
+                                console.log('process finished');
+                            });
                         });
                     });
                 }

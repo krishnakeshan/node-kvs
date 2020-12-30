@@ -1,0 +1,31 @@
+{
+  "name": "node-kvs",
+  "version": "1.0.0",
+  "description": "A single-process thread-safe key value store for Node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^8.2.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krishnakeshan/node-kvs.git"
+  },
+  "keywords": [
+    "node",
+    "key-value",
+    "store"
+  ],
+  "author": "Krishna Keshan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krishnakeshan/node-kvs/issues"
+  },
+  "homepage": "https://github.com/krishnakeshan/node-kvs#readme"
+}
